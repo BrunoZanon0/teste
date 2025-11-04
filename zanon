@@ -2,7 +2,7 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/migrate/MigrationManager.php';
+require_once __DIR__ . '/app/migrate/MigrationManager.php';
 
 use Core\Env;
 use Migrate\MigrationManager; 
@@ -65,7 +65,7 @@ class ZanonCLI
         $timestamp = date('Y_m_d_His');
         $className = $this->snakeToPascal($name);
         $fileName = "{$timestamp}_{$name}.php";
-        $filePath = __DIR__ . "/migrate/migrations/{$fileName}";
+        $filePath = __DIR__ . "/app/migrate/migrations/{$fileName}";
 
         $content = $this->getMigrationTemplate($className);
 
@@ -86,7 +86,6 @@ class ZanonCLI
         $manager = new MigrationManager();
         $this->info("Migration Status:");
         
-        // Implementar lógica de status se quiser
         $this->line("✓ Migration system ready");
         $this->line("Run 'php zanon migrate' to execute pending migrations");
     }

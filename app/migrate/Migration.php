@@ -11,7 +11,8 @@ abstract class Migration
 
     public function __construct()
     {
-        $this->pdo = Database::getConnection();
+        $database = new Database();
+        $this->pdo = $database->getConnection();
     }
 
     abstract public function up(): void;

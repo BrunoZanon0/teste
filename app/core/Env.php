@@ -8,7 +8,7 @@ class Env
 
     public static function load( $path = null): void
     {
-        $path = $path ?? __DIR__ . '/../.env';
+        $path = $path ?? __DIR__ . '/../../.env';
         
         if (!file_exists($path)) {
             throw new \Exception("Arquivo .env não encontrado: $path");

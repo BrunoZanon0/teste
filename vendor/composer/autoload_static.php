@@ -9,9 +9,14 @@ class ComposerStaticInit34c36c05260b7e8e8b2fbced22e7ef39
     public static $prefixLengthsPsr4 = array (
         'M' => 
         array (
+            'Models\\' => 7,
             'Migrate\\Migrations\\' => 19,
             'Migrate\\' => 8,
             'Middleware\\' => 11,
+        ),
+        'I' => 
+        array (
+            'Interfaces\\' => 11,
         ),
         'F' => 
         array (
@@ -29,17 +34,25 @@ class ComposerStaticInit34c36c05260b7e8e8b2fbced22e7ef39
     );
 
     public static $prefixDirsPsr4 = array (
+        'Models\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/models',
+        ),
         'Migrate\\Migrations\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/migrate/migrations',
+            0 => __DIR__ . '/../..' . '/app/migrate/migrations',
         ),
         'Migrate\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/migrate',
+            0 => __DIR__ . '/../..' . '/app/migrate',
         ),
         'Middleware\\' => 
         array (
             0 => __DIR__ . '/../..' . '/middleware',
+        ),
+        'Interfaces\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/interfaces',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -47,15 +60,15 @@ class ComposerStaticInit34c36c05260b7e8e8b2fbced22e7ef39
         ),
         'Enum\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/enum',
+            0 => __DIR__ . '/../..' . '/app/enum',
         ),
         'Core\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/core',
+            0 => __DIR__ . '/../..' . '/app/core',
         ),
         'Controllers\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/controllers',
+            0 => __DIR__ . '/../..' . '/app/controllers',
         ),
     );
 

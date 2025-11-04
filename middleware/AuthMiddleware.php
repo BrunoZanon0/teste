@@ -4,64 +4,38 @@ namespace Middleware;
 
 use Core\JWTManager;
 use Enum\JsonResponse;
-use Enum\HttpStatusCode;
-use Exception;
 
 class AuthMiddleware
 {
-    public function handle(): void
+    private $jwtManager;
+
+    public function __construct()
     {
-        $token = $this->getBearerToken();
-        
+        $this->jwtManager = new JWTManager();
+    }
+
+    public function handle()
+    {
+        $token = $this->jwtManager->getTokenFromHeader();
+
         if (!$token) {
-            JsonResponse::error(
-                'Token de autenticação não fornecido',
-                HttpStatusCode::UNAUTHORIZED
-            );
+            JsonResponse::unauthorized('Token de autenticação não fornecido');
+            exit;
         }
 
-        try {
-            $payload = JWTManager::getPayload($token);
-            
-            $GLOBALS['user'] = $payload;
-            
-        } catch (Exception $e) {
-            JsonResponse::error(
-                'Token inválido ou expirado: ' . $e->getMessage(),
-                HttpStatusCode::UNAUTHORIZED
-            );
-        }
-    }
+        $userData = $this->jwtManager->validateToken($token);
 
-    private function getBearerToken(): ?string
-    {
-        $headers = $this->getAllHeaders();
-        
-        if (isset($headers['Authorization'])) {
-            if (preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
-                return $matches[1];
-            }
+        if (!$userData) {
+            JsonResponse::unauthorized('Token inválido ou expirado');
+            exit;
         }
 
-        if (isset($_GET['token'])) {
-            return $_GET['token'];
+        if (!defined('CURRENT_USER')) {
+            define('CURRENT_USER', $userData);
         }
 
-        return null;
-    }
+        $GLOBALS['current_user'] = $userData;
 
-    private function getAllHeaders(): array
-    {
-        if (!function_exists('getallheaders')) {
-            $headers = [];
-            foreach ($_SERVER as $name => $value) {
-                if (substr($name, 0, 5) == 'HTTP_') {
-                    $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-                }
-            }
-            return $headers;
-        }
-        
-        return getallheaders();
+        return $userData;
     }
 }

@@ -5,15 +5,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Controllers\\": "controllers/",
-            "Core\\": "core/",
-            "Enum\\": "enum/", 
+            "Controllers\\": "app/controllers/",
+            "Core\\": "app/core/",
+            "Enum\\": "app/enum/", 
             "Middleware\\": "middleware/",
-            "Migrate\\Migrations\\": "migrate/migrations/",
-            "Migrate\\": "migrate/"
+            "Migrate\\Migrations\\": "app/migrate/migrations/",
+            "Migrate\\": "app/migrate/",
+            "Models\\": "app/models/" ,
+            "Interfaces\\": "app/interfaces/"
         }
     },
-        "scripts": {
+    "scripts": {
         "zanon": "php zanon",
         "migrate": "php zanon migrate",
         "make:migration": "php zanon.php make:migration"
