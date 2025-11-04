@@ -8,7 +8,9 @@ class JsonResponse
 {
     public static function success($data = null, $code = 200, $message = 'Sucesso')
     {
-        http_response_code($code);
+        $statusCode = is_object($code) ? $code->value : $code;
+        
+        http_response_code($statusCode);
         header('Content-Type: application/json');
         
         $response = [

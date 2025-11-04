@@ -31,10 +31,11 @@ $router->mount('/api', function() use ($router) {
         (new AuthMiddleware())->handle();
     });
 
-    $router->get('/pedidos', [new PedidoController(), 'index']);
-    $router->get('/pedidos/(\d+)', [new PedidoController(), 'show']);
-    $router->post('/pedidos', [new PedidoController(), 'store']);
-    $router->put('/pedidos/(\d+)', [new PedidoController(), 'update']);
+    $router->get('/pedidos', [new PedidoController(), 'getAll']);
+    $router->get('/pedidos/(\d+)', [new PedidoController(), 'getOneOrder']);
+    $router->post('/pedidos', [new PedidoController(), 'createNewOrder']);
+    $router->put('/pedidos/(\d+)', [new PedidoController(), 'updateOrder']);
+    $router->delete('/pedidos/(\d+)', [new PedidoController(), 'delete']);
 
 });
 $router->set404(function() {

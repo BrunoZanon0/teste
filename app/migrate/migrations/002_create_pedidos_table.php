@@ -13,7 +13,8 @@ class CreatePedidosTable extends Migration
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
                 descricao TEXT NOT NULL,
-                status ENUM('pendente', 'em_andamento', 'concluido') DEFAULT 'pendente',
+                status varchar(40),
+                total TEXT NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
