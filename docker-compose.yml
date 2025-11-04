@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: .
@@ -29,6 +27,18 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - api_network
+
+#  angular:
+#    build:
+#      context: ./frontend
+#      dockerfile: Dockerfile
+#    container_name: angular_frontend
+#    ports:
+#      - "4200:4200"
+#    depends_on:
+#      - app
+#    networks:
+#      - api_network
 
 volumes:
   mysql_data:

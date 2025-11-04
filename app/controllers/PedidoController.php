@@ -19,7 +19,7 @@ class PedidoController extends Controller implements PedidoControllerInterface
 
     /**
      * Lista todos os pedidos (com paginação)
-     * GET /pedidos?page=1&limit=10
+     * GET /pedidos
      */
     public function getAll(): void
     {
