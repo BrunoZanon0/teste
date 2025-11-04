@@ -6,8 +6,10 @@
         "psr-4": {
             "Controllers\\": "controllers/",
             "Core\\": "core/",
-            "Enum\\": "enum/",
-            "Migrations\\": "migrate/migrations/"
+            "Enum\\": "enum/", 
+            "Middleware\\": "middleware/",
+            "Migrate\\Migrations\\": "migrate/migrations/",
+            "Migrate\\": "migrate/"
         }
     },
         "scripts": {

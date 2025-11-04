@@ -5,7 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/migrate/MigrationManager.php';
 
 use Core\Env;
-use Migrate\MigrationManager;
+use Migrate\MigrationManager; 
 
 class ZanonCLI
 {
@@ -36,11 +36,7 @@ class ZanonCLI
                 case 'migrate:status':
                     $this->migrateStatus();
                     break;
-                
-                case 'migrate:reset':
-                    $this->migrateReset();
-                    break;
-                
+
                 case 'help':
                 default:
                     $this->showHelp();
@@ -96,20 +92,6 @@ class ZanonCLI
         $this->line("Run 'php zanon migrate' to execute pending migrations");
     }
 
-    private function migrateReset(): void
-    {
-        $this->warn("This will rollback ALL migrations. Are you sure? (yes/no)");
-        $handle = fopen("php://stdin", "r");
-        $line = fgets($handle);
-        
-        if (trim($line) !== 'yes') {
-            $this->info("Reset cancelled.");
-            return;
-        }
-        
-        $this->info("Resetting all migrations...");
-        $this->success("Reset completed!");
-    }
 
     private function showHelp(): void
     {
@@ -132,9 +114,9 @@ class ZanonCLI
         return <<<PHP
 <?php
 
-namespace Migrations;
+namespace Migrate\Migrations;
 
-use Core\Migration;
+use Migrate\Migration;
 
 class {$className} extends Migration
 {
@@ -175,18 +157,12 @@ PHP;
         echo "\033[31m✗ {$message}\033[0m\n";
     }
 
-    private function warn(string $message): void
-    {
-        echo "\033[33m! {$message}\033[0m\n";
-    }
-
     private function line(string $message): void
     {
         echo "  {$message}\n";
     }
 }
 
-// Run CLI
 if (PHP_SAPI === 'cli') {
     $cli = new ZanonCLI();
     $cli->run($argv);

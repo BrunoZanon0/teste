@@ -13,7 +13,7 @@ class MigrationManager
     public function __construct()
     {
         $this->pdo = Database::getConnection();
-        $this->migrationsPath = __DIR__ . '/../migrate/migrations/';
+        $this->migrationsPath = __DIR__ . '/migrations/';
         $this->createMigrationsTable();
     }
 
@@ -31,6 +31,7 @@ class MigrationManager
 
     public function runMigrations(): void
     {
+        require_once __DIR__ . '/Migration.php';
         $executedMigrations = $this->getExecutedMigrations();
         $migrationFiles = $this->getMigrationFiles();
 
@@ -50,17 +51,6 @@ class MigrationManager
         echo "Ran " . count($pendingMigrations) . " migration(s)\n";
     }
 
-    public function rollback(): void
-    {
-        $batch = $this->getLastBatchNumber();
-        $migrations = $this->getMigrationsByBatch($batch);
-
-        foreach ($migrations as $migration) {
-            $this->rollbackMigration($migration);
-        }
-
-        echo "Rolled back " . count($migrations) . " migration(s)\n";
-    }
 
     private function runMigration(string $migrationName, int $batch): void
     {
@@ -78,21 +68,6 @@ class MigrationManager
         echo "✓ Completed: $migrationName\n";
     }
 
-    private function rollbackMigration(string $migrationName): void
-    {
-        require_once $this->migrationsPath . $migrationName;
-
-        $className = $this->getClassNameFromFileName($migrationName);
-        $migration = new $className();
-
-        echo "Rolling back: $migrationName\n";
-        $migration->down();
-
-        $stmt = $this->pdo->prepare("DELETE FROM migrations WHERE migration = ?");
-        $stmt->execute([$migrationName]);
-
-        echo "✓ Rolled back: $migrationName\n";
-    }
 
     private function getExecutedMigrations(): array
     {
@@ -110,7 +85,14 @@ class MigrationManager
 
     private function getClassNameFromFileName(string $fileName): string
     {
-        return 'Migrations\\' . pathinfo($fileName, PATHINFO_FILENAME);
+        $filePath = $this->migrationsPath . $fileName;
+        $content = file_get_contents($filePath);
+        
+        if (preg_match('/class\s+([a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)/', $content, $matches)) {
+            return 'Migrate\\Migrations\\' . $matches[1];
+        }
+        
+        throw new \Exception("Não foi possível encontrar o nome da classe no arquivo: $fileName");
     }
 
     private function getNextBatchNumber(): int
@@ -119,16 +101,4 @@ class MigrationManager
         return (int)$stmt->fetchColumn() + 1;
     }
 
-    private function getLastBatchNumber(): int
-    {
-        $stmt = $this->pdo->query("SELECT MAX(batch) FROM migrations");
-        return (int)$stmt->fetchColumn();
-    }
-
-    private function getMigrationsByBatch(int $batch): array
-    {
-        $stmt = $this->pdo->prepare("SELECT migration FROM migrations WHERE batch = ? ORDER BY id DESC");
-        $stmt->execute([$batch]);
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
-    }
 }
