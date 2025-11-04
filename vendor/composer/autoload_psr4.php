@@ -6,7 +6,10 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Migrations\\' => array($baseDir . '/migrate/migrations'),
+    'Migrate\\Migrations\\' => array($baseDir . '/migrate/migrations'),
+    'Migrate\\' => array($baseDir . '/migrate'),
+    'Middleware\\' => array($baseDir . '/middleware'),
+    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Enum\\' => array($baseDir . '/enum'),
     'Core\\' => array($baseDir . '/core'),
     'Controllers\\' => array($baseDir . '/controllers'),

@@ -13,7 +13,6 @@ class ZanonCLI
         'migrate' => 'Run all pending migrations',
         'make:migration' => 'Create a new migration file',
         'migrate:status' => 'Show migration status',
-        'migrate:reset' => 'Rollback all migrations',
         'help' => 'Show this help message'
     ];
 
@@ -106,7 +105,6 @@ class ZanonCLI
         $this->line("Examples:");
         $this->line("  php zanon make:migration create_users_table");
         $this->line("  php zanon migrate");
-        $this->line("  php zanon migrate:rollback");
     }
 
     private function getMigrationTemplate(string $className): string

@@ -9,7 +9,13 @@ class ComposerStaticInit34c36c05260b7e8e8b2fbced22e7ef39
     public static $prefixLengthsPsr4 = array (
         'M' => 
         array (
-            'Migrations\\' => 11,
+            'Migrate\\Migrations\\' => 19,
+            'Migrate\\' => 8,
+            'Middleware\\' => 11,
+        ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
         ),
         'E' => 
         array (
@@ -23,9 +29,21 @@ class ComposerStaticInit34c36c05260b7e8e8b2fbced22e7ef39
     );
 
     public static $prefixDirsPsr4 = array (
-        'Migrations\\' => 
+        'Migrate\\Migrations\\' => 
         array (
             0 => __DIR__ . '/../..' . '/migrate/migrations',
+        ),
+        'Migrate\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/migrate',
+        ),
+        'Middleware\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/middleware',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Enum\\' => 
         array (

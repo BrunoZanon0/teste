@@ -1,0 +1,4 @@
+docker exec -it php_api php zanon  migrate   -> faz a migrat
+docker exec -it php_api php zanon  make:migration <name> -> cria uma migrate
+docker exec -it php_api php zanon  migrate:status -> status do banco
+docker exec -it php_api php zanon  help -> ajuda
