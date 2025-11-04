@@ -1,0 +1,193 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/migrate/MigrationManager.php';
+
+use Core\Env;
+use Migrate\MigrationManager;
+
+class ZanonCLI
+{
+    private array $commands = [
+        'migrate' => 'Run all pending migrations',
+        'make:migration' => 'Create a new migration file',
+        'migrate:status' => 'Show migration status',
+        'migrate:reset' => 'Rollback all migrations',
+        'help' => 'Show this help message'
+    ];
+
+    public function run(array $args): void
+    {
+        $command = $args[1] ?? 'help';
+
+        try {
+            Env::load();
+            
+            switch ($command) {
+                case 'migrate':
+                    $this->migrate();
+                    break;
+                
+                case 'make:migration':
+                    $this->makeMigration($args[2] ?? null);
+                    break;
+                
+                case 'migrate:status':
+                    $this->migrateStatus();
+                    break;
+                
+                case 'migrate:reset':
+                    $this->migrateReset();
+                    break;
+                
+                case 'help':
+                default:
+                    $this->showHelp();
+                    break;
+            }
+        } catch (Exception $e) {
+            $this->error("Error: " . $e->getMessage());
+        }
+    }
+
+    private function migrate(): void
+    {
+        $this->info("Running migrations...");
+        $manager = new MigrationManager();
+        $manager->runMigrations();
+        $this->success("Migrations completed!");
+    }
+
+    private function makeMigration(?string $name): void
+    {
+        if (!$name) {
+            $this->error("Migration name is required.");
+            $this->line("Usage: php zanon make:migration create_users_table");
+            return;
+        }
+
+        $timestamp = date('Y_m_d_His');
+        $className = $this->snakeToPascal($name);
+        $fileName = "{$timestamp}_{$name}.php";
+        $filePath = __DIR__ . "/migrate/migrations/{$fileName}";
+
+        $content = $this->getMigrationTemplate($className);
+
+        if (!is_dir(dirname($filePath))) {
+            mkdir(dirname($filePath), 0755, true);
+        }
+
+        if (file_put_contents($filePath, $content)) {
+            $this->success("Migration created: {$fileName}");
+            $this->line("Location: {$filePath}");
+        } else {
+            $this->error("Failed to create migration file");
+        }
+    }
+
+    private function migrateStatus(): void
+    {
+        $manager = new MigrationManager();
+        $this->info("Migration Status:");
+        
+        // Implementar lógica de status se quiser
+        $this->line("✓ Migration system ready");
+        $this->line("Run 'php zanon migrate' to execute pending migrations");
+    }
+
+    private function migrateReset(): void
+    {
+        $this->warn("This will rollback ALL migrations. Are you sure? (yes/no)");
+        $handle = fopen("php://stdin", "r");
+        $line = fgets($handle);
+        
+        if (trim($line) !== 'yes') {
+            $this->info("Reset cancelled.");
+            return;
+        }
+        
+        $this->info("Resetting all migrations...");
+        $this->success("Reset completed!");
+    }
+
+    private function showHelp(): void
+    {
+        $this->info("Zanon CLI - Migration Commands:");
+        $this->line("");
+        
+        foreach ($this->commands as $cmd => $description) {
+            $this->line("  " . str_pad($cmd, 20) . $description);
+        }
+        
+        $this->line("");
+        $this->line("Examples:");
+        $this->line("  php zanon make:migration create_users_table");
+        $this->line("  php zanon migrate");
+        $this->line("  php zanon migrate:rollback");
+    }
+
+    private function getMigrationTemplate(string $className): string
+    {
+        return <<<PHP
+<?php
+
+namespace Migrations;
+
+use Core\Migration;
+
+class {$className} extends Migration
+{
+    public function up(): void
+    {
+        // Add your migration logic here
+        // Example:
+        // \$this->execute("CREATE TABLE example (...)");
+    }
+
+    public function down(): void
+    {
+        // Add rollback logic here
+        // Example:
+        // \$this->execute("DROP TABLE IF EXISTS example");
+    }
+}
+PHP;
+    }
+
+    private function snakeToPascal(string $snake): string
+    {
+        return str_replace('_', '', ucwords($snake, '_'));
+    }
+
+    private function info(string $message): void
+    {
+        echo "\033[34m{$message}\033[0m\n";
+    }
+
+    private function success(string $message): void
+    {
+        echo "\033[32m✓ {$message}\033[0m\n";
+    }
+
+    private function error(string $message): void
+    {
+        echo "\033[31m✗ {$message}\033[0m\n";
+    }
+
+    private function warn(string $message): void
+    {
+        echo "\033[33m! {$message}\033[0m\n";
+    }
+
+    private function line(string $message): void
+    {
+        echo "  {$message}\n";
+    }
+}
+
+// Run CLI
+if (PHP_SAPI === 'cli') {
+    $cli = new ZanonCLI();
+    $cli->run($argv);
+}

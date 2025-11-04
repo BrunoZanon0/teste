@@ -1,0 +1,36 @@
+FROM php:8.2-apache
+
+WORKDIR /var/www/html
+
+# Instala dependências
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libzip-dev
+
+# Extensões PHP
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+
+# Habilita mod_rewrite
+RUN a2enmod rewrite
+
+# XDebug para desenvolvimento (opcional)
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
+# Copia configuração do XDebug
+COPY .docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+# Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Configura Apache
+COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]

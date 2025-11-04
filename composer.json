@@ -1,0 +1,18 @@
+{
+    "require": {
+        "bramus/router": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Controllers\\": "controllers/",
+            "Core\\": "core/",
+            "Enum\\": "enum/",
+            "Migrations\\": "migrate/migrations/"
+        }
+    },
+        "scripts": {
+        "zanon": "php zanon",
+        "migrate": "php zanon migrate",
+        "make:migration": "php zanon.php make:migration"
+    }
+}
