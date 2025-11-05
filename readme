@@ -1,8 +1,114 @@
-1 - sh ./inicializacao.sh -> inicia todo o processo backend.
-2 - docker exec -it php_api php zanon  migrate:status -> status do banco
-3 - docker exec -it php_api php zanon  migrate   -> faz a migrat
+🚀 Inicialização Rápida
 
-docker exec -it php_api php zanon  make:migration <name> -> cria uma migrate
-docker exec -it php_api php zanon  help -> ajuda
+# Apenas inicie os containers
+docker-compose up -d --build
 
-4 - sh ./testUnit.sh -> Teste unitario - php unit
+# Ou use o script completo
+sh ./inicializacao.sh
+
+⚙️ Comandos Essenciais
+🗄️ Gerenciamento do Banco de Dados
+
+
+Comando	O que faz?
+docker exec -it php_api php zanon migrate:status	📊 Verifica status das migrations
+docker exec -it php_api php zanon migrate	🚀 Executa todas as migrations pendentes
+docker exec -it php_api php zanon make:migration NomeDaMigration	📝 Cria nova migration
+docker exec -it php_api php zanon help	❓ Ajuda com todos os comandos
+
+
+🧪 Testes Automatizados
+Comando	O que faz?
+sh ./testUnit.sh	✅ Roda todos os testes unitários
+composer test	🧪 Testes completos (unit + integração)
+composer test-unit	🔬 Apenas testes unitários
+composer test-integration	🌐 Apenas testes de integração
+
+📁 Estrutura do Projeto
+
+
+api/
+├── 🐳 Docker
+│   ├── docker-compose.yml
+│   ├── docker-compose.dev.yml
+│   ├── dockerfile
+│   └── dockerfile.dev
+├── 🔧 Core
+│   ├── app/
+│   │   ├── controllers/     # PedidoController, AuthController
+│   │   ├── models/         # Modelos de dados
+│   │   ├── core/           # Configurações principais
+│   │   ├── enum/           # JsonResponse, HttpStatusCode
+│   │   ├── interfaces/     # Interfaces
+│   │   ├── migrate/        # Migrations do banco
+│   │   └── middleware/     # Auth, CORS
+│   ├── router/
+│   │   └── router.php      # Rotas da API
+│   └── index.php           # Ponto de entrada
+├── 🧪 Testes
+│   ├── tests/
+│   │   ├── Unit/           # 15 testes unitários
+│   │   ├── Integration/    # 3 testes integração
+│   │   └── configurações
+│   └── testUnit.sh         # Script de testes
+├── ⚙️ Configurações
+│   ├── .env                # Variáveis ambiente
+│   ├── .env.example        # Modelo .env
+│   ├── composer.json       # Dependências PHP
+│   └── zanon               # CLI para migrations
+└── 🚀 Scripts
+    ├── inicializacao.sh    # Inicia tudo
+    └── readme              # Documentação
+
+
+🔄 Fluxo de Desenvolvimento
+
+1. Iniciar o ambiente:
+
+sh ./inicializacao.sh
+
+2. Verificar se está tudo OK:
+
+# Status do banco
+docker exec -it php_api php zanon migrate:status
+
+# Testar a API
+curl http://localhost:8000/api/
+
+3. Desenvolver nova funcionalidade:
+
+# Criar migration (se precisar)
+docker exec -it php_api php zanon make:migration AdicionaCampoNovo
+
+# Executar migrations
+docker exec -it php_api php zanon migrate
+
+4. Testar o código:
+
+# Roda todos os testes
+sh ./testUnit.sh
+
+# Ou
+composer test
+
+ Endpoints da API
+Método	Endpoint	Descrição
+GET	/api/	✅ Health check da API
+POST	/api/auth/register	👤 Registrar usuário
+POST	/api/auth/login	🔐 Login do usuário
+GET	/api/pedidos	📋 Listar pedidos
+POST	/api/pedidos	➕ Criar pedido
+PUT	/api/pedidos/{id}	✏️ Atualizar pedido
+DELETE	/api/pedidos/{id}	🗑️ Deletar pedido
+
+
+🎯 Checklist de Deploy/Commit
+sh ./inicializacao.sh funciona
+
+sh ./testUnit.sh passa em todos os testes
+
+Migrations estão atualizadas
+
+API responde em http://localhost:8000/api/
+
+Grato pelo belo teste

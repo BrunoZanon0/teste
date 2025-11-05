@@ -6,4 +6,8 @@
 
     docker compose up -d --build
 
-    echo "🔄 Docker iniciado com sucesso"
+    echo "🚀 Docker iniciado com sucesso"
+
+    docker exec -it php_api php zanon  migrate
+
+    echo "🗄️ Migrate Executada com sucesso"

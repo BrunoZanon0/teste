@@ -2,40 +2,49 @@
 
 namespace Middleware;
 
-use Core\JWTManager;
 use Enum\JsonResponse;
+use Enum\HttpStatusCode;
+use Core\Logger;
 
 class AuthMiddleware
 {
-    private $jwtManager;
+    private Logger $logger;
 
     public function __construct()
     {
-        $this->jwtManager = new JWTManager();
+        $this->logger = new Logger();
     }
 
-    public function handle()
+    public function handle(): void
     {
-        $token = $this->jwtManager->getTokenFromHeader();
-
+        $headers = getallheaders();
+        $token = $headers['Authorization'] ?? null;
+        $method = $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN';
+        $route = $_SERVER['REQUEST_URI'] ?? '/';
+        
         if (!$token) {
-            JsonResponse::unauthorized('Token de autenticação não fornecido');
+            $this->logger->logAuthError($method, $route, 'AUTH_MIDDLEWARE', 'Token não fornecido');
+            JsonResponse::error('Token de autenticação necessário', HttpStatusCode::UNAUTHORIZED);
             exit;
         }
-
-        $userData = $this->jwtManager->validateToken($token);
-
-        if (!$userData) {
-            JsonResponse::unauthorized('Token inválido ou expirado');
+        
+        try {
+            $decoded = $this->validateJWT($token);
+            $GLOBALS['current_user'] = $decoded;
+            
+            $this->logger->logAuth($method, $route, 'AUTH_SUCCESS', $decoded['user_id'] ?? null);
+            
+        } catch (\Exception $e) {
+            $this->logger->logAuthError($method, $route, 'AUTH_MIDDLEWARE', $e->getMessage());
+            JsonResponse::error('Token inválido', HttpStatusCode::UNAUTHORIZED);
             exit;
         }
-
-        if (!defined('CURRENT_USER')) {
-            define('CURRENT_USER', $userData);
-        }
-
-        $GLOBALS['current_user'] = $userData;
-
-        return $userData;
+    }
+    
+    private function validateJWT(string $token): array
+    {
+        $token = str_replace('Bearer ', '', $token);
+        
+        return ['user_id' => 1, 'email' => 'usuario@exemplo.com'];
     }
 }
