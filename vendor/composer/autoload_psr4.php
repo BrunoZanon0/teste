@@ -6,6 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Tests\\' => array($baseDir . '/tests'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Models\\' => array($baseDir . '/app/models'),
     'Migrate\\Migrations\\' => array($baseDir . '/app/migrate/migrations'),
     'Migrate\\' => array($baseDir . '/app/migrate'),
@@ -13,6 +15,7 @@ return array(
     'Interfaces\\' => array($baseDir . '/app/interfaces'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Enum\\' => array($baseDir . '/app/enum'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Core\\' => array($baseDir . '/app/core'),
     'Controllers\\' => array($baseDir . '/app/controllers'),
 );
