@@ -35,7 +35,7 @@ $router->mount('/api', function() use ($router) {
     $router->get('/pedidos/(\d+)', [new PedidoController(), 'getOneOrder']);
     $router->post('/pedidos', [new PedidoController(), 'createNewOrder']);
     $router->put('/pedidos/(\d+)', [new PedidoController(), 'updateOrder']);
-    $router->delete('/pedidos/(\d+)', [new PedidoController(), 'delete']);
+    // $router->delete('/pedidos/(\d+)', [new PedidoController(), 'delete']); // Desabilitei pois pedia no pdf teste
 
 });
 $router->set404(function() {
