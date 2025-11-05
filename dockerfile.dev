@@ -25,9 +25,6 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 # Copia configuração do XDebug
 COPY .docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-# Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
 # Configura Apache
 COPY .docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
