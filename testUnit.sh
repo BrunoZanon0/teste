@@ -7,5 +7,5 @@ composer test
 # Teste unitários
 composer test-unit
 
-# Teste específico
-./vendor/bin/phpunit tests/Unit/Controllers/PedidoControllerTest.php
+# Apenas integração
+composer test-integration
